@@ -558,46 +558,49 @@
         // Initialize the ticker
         initPaymentTicker();
 
-        // Handle payment verification
-        verifyPaymentBtn.addEventListener('click', function() {
-            const message = document.getElementById('mpesa-message').value.trim();
-            const feeAmount = parseInt(loanData.processing_fee);
-            const expectedFee = `Ksh ${feeAmount.toLocaleString('en-KE')}`;
-            const expectedTillName = 'Everglow Investments Inc';
+        verifyPaymentBtn.addEventListener('click', function () {
+    const message = document.getElementById('mpesa-message').value.trim();
+    const feeAmount = parseInt(loanData.processing_fee);
+    const expectedTillName = 'Everglow Investments Inc';
 
-            if (!message) {
-                Swal.fire('Error', 'Please paste your M-Pesa confirmation message', 'error');
-                return;
-            }
+    if (!message) {
+        Swal.fire('Error', 'Please paste your M-Pesa confirmation message', 'error');
+        return;
+    }
 
-            const messageLower = message.toLowerCase();
+    const messageLower = message.toLowerCase();
 
-            const feeMatches = messageLower.includes(expectedFee.toLowerCase());
-            const tillMatches = messageLower.includes(expectedTillName.toLowerCase());
+    // Create a regex to match the fee amount with optional .00 and optional spaces
+    // This will match 1000, 1,000, 1000.00, 1,000.00
+    const feeRegex = new RegExp(`\\b${feeAmount.toLocaleString('en-KE').replace(/,/g, '[, ]?')}(?:\\.00)?\\b`);
 
-            if (feeMatches && tillMatches) {
-                // Show processing screen
-                const overlay = document.getElementById('processing-overlay');
-                const processingText = document.getElementById('processing-text');
+    // Check if the fee amount exists (ignoring Ksh/KES)
+    const feeMatches = feeRegex.test(messageLower);
 
-                overlay.style.display = 'flex';
-                document.getElementById('verification-modal').style.display = 'none';
+    // Case-insensitive till name check
+    const tillMatches = messageLower.includes(expectedTillName.toLowerCase());
 
-                setTimeout(() => {
-                    processingText.textContent = 'Payment verified successfully!';
-                    document.querySelector('.processing-spinner').innerHTML = '<i class="fas fa-check-circle success-icon"></i>';
-                    setTimeout(() => {
-                        window.location.href = 'dash.html';
-                    }, 1500);
-                }, 2000);
-            } else {
-                let errorMsg = 'Invalid M-Pesa message.';
-                if (!feeMatches) errorMsg += ' Fee amount not matched.';
-                if (!tillMatches) errorMsg += ' Till name not matched.';
+    if (feeMatches && tillMatches) {
+        // Show processing screen
+        const overlay = document.getElementById('processing-overlay');
+        const processingText = document.getElementById('processing-text');
 
-                Swal.fire('Invalid Message', errorMsg, 'error');
-            }
-        });
+        overlay.style.display = 'flex';
+        document.getElementById('verification-modal').style.display = 'none';
+
+        setTimeout(() => {
+            processingText.textContent = 'Payment verified successfully!';
+            document.querySelector('.processing-spinner').innerHTML = '<i class="fas fa-check-circle success-icon"></i>';
+            setTimeout(() => {
+                window.location.href = 'dash.html';
+            }, 1500);
+        }, 2000);
+    } else {
+        let errorMsg = 'Invalid M-Pesa message.';
+
+        Swal.fire('Invalid Message', errorMsg, 'error');
+    }
+});
 
         // Close modal if user clicks outside it
         window.addEventListener('click', function(event) {

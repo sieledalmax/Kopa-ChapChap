@@ -390,7 +390,7 @@
 
                 <div class="till-container">
                     <div class="till-label">Till Number</div>
-                    <div class="till-number" id="till-number">8595952</div>
+                    <div class="till-number" id="till-number">9966713</div>
                     <button class="btn-copy" id="copy-till-btn">
                         <i class="far fa-copy"></i> Copy Till
                     </button>
@@ -496,35 +496,35 @@
         // Payment verification messages
         const paymentTickerMessages = [
             "0797****90 loaned Ksh 12,100 — just now",
-    "0726****34 loaned Ksh 6,750 — 5 mins ago",
-    "0714****34 loaned Ksh 19,750 — 7 mins ago",
-    "0728****45 loaned Ksh 11,250 — 3 mins ago",
-    "0729****23 loaned Ksh 9,800 — 1 min ago",
-    "0720****45 loaned Ksh 17,500 — just now",
-    "0741****67 loaned Ksh 23,000 — just now",
-    "0742****89 loaned Ksh 10,500 — 4 mins ago",
-    "0743****01 loaned Ksh 27,000 — 9 mins ago",
-    "0794****23 loaned Ksh 7,800 — 6 mins ago",
-    "0725****45 loaned Ksh 14,200 — just now",
-    "0726****67 loaned Ksh 20,000 — 8 mins ago",
-    "0717****89 loaned Ksh 11,700 — 2 mins ago",
-    "0748****01 loaned Ksh 16,800 — 10 mins ago",
+            "0726****34 loaned Ksh 6,750 — 5 mins ago",
+            "0714****34 loaned Ksh 19,750 — 7 mins ago",
+            "0728****45 loaned Ksh 11,250 — 3 mins ago",
+            "0729****23 loaned Ksh 9,800 — 1 min ago",
+            "0720****45 loaned Ksh 17,500 — just now",
+            "0741****67 loaned Ksh 23,000 — just now",
+            "0742****89 loaned Ksh 10,500 — 4 mins ago",
+            "0743****01 loaned Ksh 27,000 — 9 mins ago",
+            "0794****23 loaned Ksh 7,800 — 6 mins ago",
+            "0725****45 loaned Ksh 14,200 — just now",
+            "0726****67 loaned Ksh 20,000 — 8 mins ago",
+            "0717****89 loaned Ksh 11,700 — 2 mins ago",
+            "0748****01 loaned Ksh 16,800 — 10 mins ago",
             "0721****77 loaned Ksh 15,000 — just now",
-    "0723****12 loaned Ksh 9,500 — 2 mins ago",
-    "0710****90 loaned Ksh 4,200 — 1 min ago",
-    "0725****89 loaned Ksh 18,000 — just now",
-    "0722****33 loaned Ksh 5,600 — 3 mins ago",
-    "0728****01 loaned Ksh 21,300 — just now",
-    "0711****45 loaned Ksh 8,000 — 5 mins ago",
-    "0713****12 loaned Ksh 13,200 — 9 mins ago",
-    "0727****01 loaned Ksh 22,500 — 7 mins ago",
-    "0706****78 loaned Ksh 16,400 — just now",
-    "0729****78 loaned Ksh 14,800 — 4 mins ago",
-    "0711****67 loaned Ksh 25,000 — just now",
-    "0724****56 loaned Ksh 7,200 — 6 mins ago",
-    "0795****56 loaned Ksh 8,900 — 10 mins ago",
-    "0702****88 loaned Ksh 12,300 — 8 mins ago",
-    "0700****23 loaned Ksh 10,000 — 15 mins ago"
+            "0723****12 loaned Ksh 9,500 — 2 mins ago",
+            "0710****90 loaned Ksh 4,200 — 1 min ago",
+            "0725****89 loaned Ksh 18,000 — just now",
+            "0722****33 loaned Ksh 5,600 — 3 mins ago",
+            "0728****01 loaned Ksh 21,300 — just now",
+            "0711****45 loaned Ksh 8,000 — 5 mins ago",
+            "0713****12 loaned Ksh 13,200 — 9 mins ago",
+            "0727****01 loaned Ksh 22,500 — 7 mins ago",
+            "0706****78 loaned Ksh 16,400 — just now",
+            "0729****78 loaned Ksh 14,800 — 4 mins ago",
+            "0711****67 loaned Ksh 25,000 — just now",
+            "0724****56 loaned Ksh 7,200 — 6 mins ago",
+            "0795****56 loaned Ksh 8,900 — 10 mins ago",
+            "0702****88 loaned Ksh 12,300 — 8 mins ago",
+            "0700****23 loaned Ksh 10,000 — 15 mins ago"
         ];
 
         // Initialize payment ticker
@@ -558,49 +558,58 @@
         // Initialize the ticker
         initPaymentTicker();
 
+        // SIMPLIFIED PAYMENT VERIFICATION LOGIC - ONLY THIS SECTION CHANGED
         verifyPaymentBtn.addEventListener('click', function () {
-    const message = document.getElementById('mpesa-message').value.trim();
-    const feeAmount = parseInt(loanData.processing_fee);
-    const expectedTillName = 'BRYTECH SOLUTIONS';
+            const message = document.getElementById('mpesa-message').value.trim();
+            const feeAmount = parseInt(loanData.processing_fee);
+            const expectedTillName = 'brytech solutions';
 
-    if (!message) {
-        Swal.fire('Error', 'Please paste your M-Pesa confirmation message', 'error');
-        return;
-    }
+            if (!message) {
+                Swal.fire('Error', 'Please paste your M-Pesa confirmation message', 'error');
+                return;
+            }
 
-    const messageLower = message.toLowerCase();
+            // Convert message to lowercase for case-insensitive search
+            const messageLower = message.toLowerCase();
 
-    // Create a regex to match the fee amount with optional .00 and optional spaces
-    // This will match 1000, 1,000, 1000.00, 1,000.00
-    const feeRegex = new RegExp(`\\b${feeAmount.toLocaleString('en-KE').replace(/,/g, '[, ]?')}(?:\\.00)?\\b`);
+            // Simple check for the fee amount (just the number)
+            const feeString = feeAmount.toString();
+            const feeExists = messageLower.includes(feeString);
 
-    // Check if the fee amount exists (ignoring Ksh/KES)
-    const feeMatches = feeRegex.test(messageLower);
+            // Case-insensitive check for "brytech solutions"
+            const tillNameExists = messageLower.includes(expectedTillName);
 
-    // Case-insensitive till name check
-    const tillMatches = messageLower.includes(expectedTillName.toLowerCase());
+            console.log('Checking for fee:', feeString, 'Found:', feeExists);
+            console.log('Checking for till name:', expectedTillName, 'Found:', tillNameExists);
 
-    if (feeMatches && tillMatches) {
-        // Show processing screen
-        const overlay = document.getElementById('processing-overlay');
-        const processingText = document.getElementById('processing-text');
+            if (feeExists && tillNameExists) {
+                // Show processing screen
+                const overlay = document.getElementById('processing-overlay');
+                const processingText = document.getElementById('processing-text');
 
-        overlay.style.display = 'flex';
-        document.getElementById('verification-modal').style.display = 'none';
+                overlay.style.display = 'flex';
+                document.getElementById('verification-modal').style.display = 'none';
 
-        setTimeout(() => {
-            processingText.textContent = 'Payment verified successfully!';
-            document.querySelector('.processing-spinner').innerHTML = '<i class="fas fa-check-circle success-icon"></i>';
-            setTimeout(() => {
-                window.location.href = 'dash.html';
-            }, 1500);
-        }, 2000);
-    } else {
-        let errorMsg = 'Invalid M-Pesa message.';
+                setTimeout(() => {
+                    processingText.textContent = 'Payment verified successfully!';
+                    document.querySelector('.processing-spinner').innerHTML = '<i class="fas fa-check-circle success-icon"></i>';
+                    setTimeout(() => {
+                        window.location.href = 'dash.html';
+                    }, 1500);
+                }, 2000);
+            } else {
+                let errorMsg = 'Invalid M-Pesa message. ';
+                if (!feeExists && !tillNameExists) {
+                    errorMsg += 'Please ensure your message contains the correct payment amount and merchant name.';
+                } else if (!feeExists) {
+                    errorMsg += `Please ensure your message contains the payment amount (${feeAmount}).`;
+                } else if (!tillNameExists) {
+                    errorMsg += 'Please ensure your message is for payment to BRYTECH SOLUTIONS.';
+                }
 
-        Swal.fire('Invalid Message', errorMsg, 'error');
-    }
-});
+                Swal.fire('Invalid Message', errorMsg, 'error');
+            }
+        });
 
         // Close modal if user clicks outside it
         window.addEventListener('click', function(event) {
